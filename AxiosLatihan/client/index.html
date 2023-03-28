@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Belajar Axios</title>
+
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Belajar Axios</h1>
+    <button onclick="addUser()">Add User</button>
+    <button onclick="ubahUser()">Update User</button>
+    <button onclick="deleteUser()">Delete User</button>
+
+    <script>
+        const myInstance = axios.create({
+            baseURL : "http://localhost:3000"
+        })
+        
+        myInstance.get("/users")
+        .then(({data})=> {
+            console.log("Bisa dong JSON - nya : ", data)
+        })
+        .catch((err) => {
+            console.log("gagal, " + err)
+        })
+        .finally(()=>{
+            console.log("Request selesai")
+        })
+
+
+        function addUser (){
+            const newUser = {
+                name : "ajat",
+                email : "ajat@mail.com"
+            }
+            myInstance.post("/users",newUser)
+            .then(({data}) => {
+                console.log("Data : ",data)
+            })
+            .catch(err => {
+                console.log("gagal, " + err)
+            })
+            .finally(() => {
+                console.log("Post selesai")
+            })
+        }
+
+        //aneh, ${userID} gak berfungsi kayak di youtube
+        function ubahUser (){
+            const updateUser = {
+                name : "Kosasih",
+                email : "kosasih@mail.com"
+            }
+            const userId = 2;
+
+            // axios.put('http://localhost:3000/users/'+userId,updateUser)
+            // .then(({data}) => {
+            //     console.log("Data yang terupdate: ",data)
+            // })
+            // .catch(err => {
+            //     console.log("gagal, " + err)
+            // })
+            // .finally(() => {
+            //     console.log("Post selesai")
+            // })
+
+            myInstance({
+                method : "PUT",
+                url : "/users/"+userId,
+                data : updateUser
+            })
+            .then(({data}) => {
+                console.log("Data yang terupdate: ",data)
+            })
+            .catch(err => {
+                console.log("gagal, " + err)
+            })
+            .finally(() => {
+                console.log("Post selesai")
+            })
+        }
+
+        function deleteUser (){
+            const userID = 5
+
+            myInstance.delete("/users/"+userID)
+            .then(({data}) => {
+                console.log("Data yang terhapus : ",data)
+            })
+            .catch(err => {
+                console.log("gagal, " + err)
+            })
+            .finally(() => {
+                console.log("Post selesai")
+            })
+        }
+    </script>
+</body>
+</html>
